@@ -1,5 +1,4 @@
-package com.example.testing
-
+package com.example.skillcinema.presentation.home
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -7,11 +6,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,23 +25,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.lazy.grid.GridCells // Required for LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-
-
+import com.example.skillcinema.data.model.Movie
 
 @Composable
 fun MovieItemView(item: Movie, onClick: () -> Unit) {
@@ -79,7 +75,6 @@ fun MovieItemView(item: Movie, onClick: () -> Unit) {
         )
     }
 }
-
 
 @Composable
 fun MovieSection(
@@ -185,8 +180,6 @@ fun MovieGrid(movies: List<Movie>, genre: String, onClick: (Movie) -> Unit, onBa
     }
 }
 
-
-
 @Composable
 fun MovieGridItem(item: Movie, onClick: () -> Unit) {
     Column(
@@ -258,7 +251,7 @@ fun HomeSc(
         }
 
         is MovieScreenState.Success -> {
-            val movies = (state as MovieScreenState.Success)
+            val movies = state as MovieScreenState.Success
 
             if (showGrid) {
                 MovieGrid(
@@ -286,7 +279,7 @@ fun HomeSc(
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
-
+                    // Now Showing Section
                     item {
                         if (movies.errors.containsKey("nowShowing")) {
                             ErrorSection(
@@ -309,6 +302,7 @@ fun HomeSc(
                         }
                     }
 
+                    // Popular Movies Section
                     item {
                         if (movies.errors.containsKey("popular")) {
                             ErrorSection(
@@ -331,6 +325,7 @@ fun HomeSc(
                         }
                     }
 
+                    // Top Rated Movies Section
                     item {
                         if (movies.errors.containsKey("topRated")) {
                             ErrorSection(
@@ -359,6 +354,7 @@ fun HomeSc(
         else -> {}
     }
 }
+
 
 @Composable
 fun ErrorSection(

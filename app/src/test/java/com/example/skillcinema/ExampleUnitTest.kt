@@ -1,4 +1,4 @@
-package com.example.testing
+package com.example.skillcinema
 
 import org.junit.Test
 

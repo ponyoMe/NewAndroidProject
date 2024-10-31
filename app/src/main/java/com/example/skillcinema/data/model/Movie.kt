@@ -1,14 +1,7 @@
-package com.example.testing
+package com.example.skillcinema.data.model
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerialName
 
-@Serializable
-data class MovieResponse(
-    val items: List<Movie>,
-    val total: Int,
-    val totalPages: Int
-)
 
 @Serializable
 data class Movie(
@@ -25,14 +18,4 @@ data class Movie(
     val type: String?,
     val posterUrl: String?,
     val posterUrlPreview: String?
-)
-
-@Serializable
-data class Country(
-    val country: String
-)
-
-@Serializable
-data class Genre(
-    val genre: String
 )

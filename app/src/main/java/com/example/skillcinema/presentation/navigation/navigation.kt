@@ -1,5 +1,8 @@
-package com.example.testing
+package com.example.skillcinema.presentation.navigation
 
+import com.example.skillcinema.presentation.home.HomeSc
+import com.example.skillcinema.presentation.profile.ProfileScreen
+import com.example.skillcinema.presentation.search.SearchScreen
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,6 +26,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.skillcinema.presentation.onboarding.OnBoardingScreen
+import com.example.testing.R
 
 
 @Composable
