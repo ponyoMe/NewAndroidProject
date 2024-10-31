@@ -118,8 +118,10 @@ sealed class MovieScreenState {
         val popularMovies: List<Movie> = emptyList(),
         val topRatedMovies: List<Movie> = emptyList(),
         val nowShowingMovies: List<Movie> = emptyList(),
-        val errors: Map<String, String> = emptyMap() // Store errors per section
+        val errors: Map<String, String> = emptyMap()
     ) : MovieScreenState()
+    data class Error(val message: String) : MovieScreenState()
+
 }
 
 class MovieViewModel : ViewModel() {

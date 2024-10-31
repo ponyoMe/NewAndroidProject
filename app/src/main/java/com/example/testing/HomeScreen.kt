@@ -248,6 +248,15 @@ fun HomeSc(
     var selectedMovies by remember { mutableStateOf<List<Movie>>(emptyList()) }
 
     when (state) {
+        is MovieScreenState.Initial -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Welcome to Skillcinema")
+            }
+        }
+
         is MovieScreenState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -285,7 +294,6 @@ fun HomeSc(
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }
-
 
                     item {
                         if (movies.errors.containsKey("nowShowing")) {
@@ -356,7 +364,18 @@ fun HomeSc(
             }
         }
 
-        else -> {}
+        is MovieScreenState.Error -> {
+            val errorMessage = (state as MovieScreenState.Error).message
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                ErrorSection(
+                    error = errorMessage,
+                    onRetry = { viewModel.retry() }
+                )
+            }
+        }
     }
 }
 
