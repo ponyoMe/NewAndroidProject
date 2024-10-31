@@ -1,4 +1,4 @@
-package com.example.testing
+package com.example.skillcinema.presentation.profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,19 +12,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun SearchScreen () {
+fun ProfileScreen () {
     Column(
         modifier = Modifier.fillMaxSize().background(color = Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
-        Text(text ="This is search page")
+        Text(text ="This is profile page")
     }
 
 }
 
 @Preview
 @Composable
-fun SearchScreenPreview () {
+fun ProfileScreenPreview () {
     ProfileScreen()
 }
