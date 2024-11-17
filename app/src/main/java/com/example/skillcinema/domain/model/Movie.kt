@@ -1,14 +1,10 @@
-package com.example.testing
+package com.example.skillcinema.domain.model
 
+import android.health.connect.datatypes.units.Length
+import com.example.skillcinema.data.model.Country
+import com.example.skillcinema.data.model.Genre
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerialName
 
-@Serializable
-data class MovieResponse(
-    val items: List<Movie>,
-    val total: Int,
-    val totalPages: Int
-)
 
 @Serializable
 data class Movie(
@@ -22,17 +18,9 @@ data class Movie(
     val ratingKinopoisk: Double?,
     val ratingImdb: Double?,
     val year: Int?,
+    val filmLength: Int?,
+    val ratingAgeLimits: String?,
     val type: String?,
     val posterUrl: String?,
     val posterUrlPreview: String?
-)
-
-@Serializable
-data class Country(
-    val country: String
-)
-
-@Serializable
-data class Genre(
-    val genre: String
 )

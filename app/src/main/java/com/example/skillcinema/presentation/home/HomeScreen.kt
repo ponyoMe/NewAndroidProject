@@ -1,17 +1,25 @@
-package com.example.testing
-
+package com.example.skillcinema.presentation.home
 
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.ripple
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -19,32 +27,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.lazy.grid.GridCells // Required for LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.IconButton
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-
-
+import com.example.skillcinema.domain.model.Movie
 
 @Composable
-fun MovieItemView(item: Movie, onClick: () -> Unit) {
+fun MovieItemView(
+    item: Movie,
+    onClick: (Int) -> Unit,
+) {
     Column(
         modifier = Modifier
             .padding(8.dp)
             .width(120.dp)
-            .clickable { onClick() },
-        horizontalAlignment = Alignment.Start
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(),
+                onClick = { onClick.invoke(item.kinopoiskId) }
+            ),
+        horizontalAlignment = Alignment.Start,
     ) {
         Box {
             AsyncImage(
@@ -63,7 +69,10 @@ fun MovieItemView(item: Movie, onClick: () -> Unit) {
                     color = Color.White,
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .background(Color.Black.copy(alpha = 0.7f), shape = RoundedCornerShape(4.dp))
+                        .background(
+                            Color.Black.copy(alpha = 0.7f),
+                            shape = RoundedCornerShape(4.dp)
+                        )
                         .padding(4.dp)
                 )
             }
@@ -80,12 +89,11 @@ fun MovieItemView(item: Movie, onClick: () -> Unit) {
     }
 }
 
-
 @Composable
 fun MovieSection(
     title: String,
     movies: List<Movie>,
-    onClick: (Movie) -> Unit,
+    onClick: (Int) -> Unit,
     onShowAllClick: () -> Unit
 ) {
     Column(
@@ -107,7 +115,12 @@ fun MovieSection(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             items(movies) { movie ->
-                MovieItemView(item = movie, onClick = { onClick(movie) })
+                MovieItemView(
+                    item = movie,
+                    onClick = { movieId ->
+                        onClick.invoke(movieId)
+                    }
+                )
             }
 
             item {
@@ -122,7 +135,10 @@ fun ShowAllButton(onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .clickable { onClick() },
+            .clickable {
+                Log.d("ShowAllButton", "Show All button clicked")
+                onClick()
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -168,16 +184,17 @@ fun MovieGrid(movies: List<Movie>, genre: String, onClick: (Movie) -> Unit, onBa
             )
         }
 
-
         Spacer(modifier = Modifier.height(60.dp))
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize().padding(start = 25.dp, end = 25.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 25.dp, end = 25.dp),
             contentPadding = PaddingValues(8.dp)
         ) {
             items(movies) { movie ->
                 MovieGridItem(movie) {
-                    Log.d("MovieGrid", "Кликнули по фильму: ${movie.nameRu}")
+                    Log.d("HomePage", "ID: ${movie.kinopoiskId}")
                     onClick(movie)
                 }
             }
@@ -185,21 +202,21 @@ fun MovieGrid(movies: List<Movie>, genre: String, onClick: (Movie) -> Unit, onBa
     }
 }
 
-
-
 @Composable
-fun MovieGridItem(item: Movie, onClick: () -> Unit) {
+fun MovieGridItem(item: Movie, onClick: (movieID: Int) -> Unit) {
     Column(
         modifier = Modifier
             .padding(start = 20.dp)
             .width(120.dp)
-            .clickable { onClick() },
+            .clickable {
+                onClick(item.kinopoiskId)
+            },
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Box {
             AsyncImage(
-                model = item.posterUrlPreview,
-                contentDescription = item.nameRu,
+                model = item.posterUrl,
+                contentDescription = item.nameOriginal,
                 modifier = Modifier
                     .width(110.dp)
                     .height(150.dp)
@@ -213,7 +230,10 @@ fun MovieGridItem(item: Movie, onClick: () -> Unit) {
                     color = Color.White,
                     modifier = Modifier
                         .align(Alignment.TopStart)
-                        .background(Color.Black.copy(alpha = 0.7f), shape = RoundedCornerShape(4.dp))
+                        .background(
+                            Color.Black.copy(alpha = 0.7f),
+                            shape = RoundedCornerShape(4.dp)
+                        )
                         .padding(4.dp)
                 )
             }
@@ -239,24 +259,18 @@ fun BackButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun HomeSc(
-    viewModel: MovieViewModel = viewModel()
+fun HomeScreen(
+    viewModel: MovieViewModel = hiltViewModel(),
+    onMovieClick: (Int) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     var showGrid by remember { mutableStateOf(false) }
     var selectedGenre by remember { mutableStateOf("") }
     var selectedMovies by remember { mutableStateOf<List<Movie>>(emptyList()) }
 
-    when (state) {
-        is MovieScreenState.Initial -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Welcome to Skillcinema")
-            }
-        }
+    Log.d("HomePage", "HomeScreen started")
 
+    when (state) {
         is MovieScreenState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
@@ -267,14 +281,14 @@ fun HomeSc(
         }
 
         is MovieScreenState.Success -> {
-            val movies = (state as MovieScreenState.Success)
+            val movies = state as MovieScreenState.Success
 
             if (showGrid) {
                 MovieGrid(
                     movies = selectedMovies,
                     genre = selectedGenre,
-                    onClick = { movie ->
-                        Log.d("HomePage", "Clicked on movie: ${movie.nameRu}")
+                    onClick = {
+                        movie -> onMovieClick(movie.kinopoiskId)
                     },
                     onBack = { showGrid = false }
                 )
@@ -295,6 +309,7 @@ fun HomeSc(
                         Spacer(modifier = Modifier.height(20.dp))
                     }
 
+                    // Now Showing Section
                     item {
                         if (movies.errors.containsKey("nowShowing")) {
                             ErrorSection(
@@ -305,8 +320,8 @@ fun HomeSc(
                             MovieSection(
                                 title = "Премьеры",
                                 movies = movies.nowShowingMovies,
-                                onClick = { movie ->
-                                    Log.d("HomePage", "Clicked on movie: ${movie.nameRu}")
+                                onClick = { movieId ->
+                                    onMovieClick(movieId)
                                 },
                                 onShowAllClick = {
                                     selectedGenre = "Премьеры"
@@ -317,6 +332,7 @@ fun HomeSc(
                         }
                     }
 
+                    // Popular Movies Section
                     item {
                         if (movies.errors.containsKey("popular")) {
                             ErrorSection(
@@ -327,10 +343,12 @@ fun HomeSc(
                             MovieSection(
                                 title = "Популярное",
                                 movies = movies.popularMovies,
-                                onClick = { movie ->
-                                    Log.d("HomePage", "Clicked on movie: ${movie.nameRu}")
+                                onClick = { movieId ->
+                                    onMovieClick.invoke(movieId)
+                                    Log.d("HomePage", "Popular movie section clicked")
                                 },
                                 onShowAllClick = {
+                                    Log.d("HomePage", "ShowAllClick Popular movie section clicked")
                                     selectedGenre = "Популярное"
                                     selectedMovies = movies.popularMovies
                                     showGrid = true
@@ -339,6 +357,7 @@ fun HomeSc(
                         }
                     }
 
+                    // Top Rated Movies Section
                     item {
                         if (movies.errors.containsKey("topRated")) {
                             ErrorSection(
@@ -349,9 +368,7 @@ fun HomeSc(
                             MovieSection(
                                 title = "Топ рейтинга",
                                 movies = movies.topRatedMovies,
-                                onClick = { movie ->
-                                    Log.d("HomePage", "Clicked on movie: ${movie.nameRu}")
-                                },
+                                onClick = { movieId -> onMovieClick(movieId)},
                                 onShowAllClick = {
                                     selectedGenre = "Топ рейтинга"
                                     selectedMovies = movies.topRatedMovies
@@ -364,20 +381,10 @@ fun HomeSc(
             }
         }
 
-        is MovieScreenState.Error -> {
-            val errorMessage = (state as MovieScreenState.Error).message
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                ErrorSection(
-                    error = errorMessage,
-                    onRetry = { viewModel.retry() }
-                )
-            }
-        }
+        else -> {}
     }
 }
+
 
 @Composable
 fun ErrorSection(
@@ -406,6 +413,6 @@ fun ErrorSection(
 @Composable
 fun DefaultPreview() {
     MaterialTheme {
-        HomeSc()
+        HomeScreen(onMovieClick = {})
     }
 }
