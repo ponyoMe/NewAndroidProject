@@ -1,6 +1,5 @@
 package com.example.skillcinema.presentation.navigation
 
-import com.example.skillcinema.presentation.home.HomeSc
 import com.example.skillcinema.presentation.profile.ProfileScreen
 import com.example.skillcinema.presentation.search.SearchScreen
 import androidx.compose.foundation.layout.Spacer
@@ -15,29 +14,38 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.skillcinema.presentation.film.FilmScreen
+import com.example.skillcinema.presentation.home.HomeScreen
 import com.example.skillcinema.presentation.onboarding.OnBoardingScreen
 import com.example.testing.R
 
 
 @Composable
-fun NavLogic() {
-    val navController = rememberNavController()
+fun NavLogic(
+    navController: NavHostController = rememberNavController()
+) {
     Scaffold(
-        bottomBar = { BottomNav(navController) }
-    ) { innerPadding ->
-        NavigationGraph(navController, Modifier.padding(innerPadding))
-    }
+        content = { innerPadding ->
+            NavigationGraph(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+            )
+        },
+        bottomBar = {
+            BottomNav(navController)
+        }
+    )
 }
 
 @Composable
@@ -50,27 +58,30 @@ fun BottomNav(
         BottomNavItems.Profile
     )
 
-    var selectedItem by remember { mutableStateOf(0) }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
     BottomNavigation(
         backgroundColor = Color.White
     ) {
-        items.forEachIndexed { index,screen ->
+        items.forEach { screen ->
             BottomNavigationItem(
                 icon = {
-                    Icon(painter = painterResource(id = screen.icon),
-                        contentDescription = screen.route,
+                    Icon(
                         modifier = Modifier.size(30.dp),
-                        tint = if (selectedItem == index) Color(0xFF3D3BFF) else Color.Gray
+                        painter = painterResource(screen.icon),
+                        contentDescription = null,
+                        tint = if (navBackStackEntry?.destination?.route == screen.route)
+                            Color(0xFF3D3BFF)
+                        else Color.Gray
                     )
                 },
                 onClick = {
-                    selectedItem = index
                     navController.navigate(screen.route) {
                         popUpTo(navController.graph.startDestinationId)
                         launchSingleTop = true
                     }
                 },
-                selected = selectedItem == index
+                selected = navBackStackEntry?.destination?.route == screen.route
             )
 
         }
@@ -79,19 +90,44 @@ fun BottomNav(
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController, startDestination = "onboarding", modifier = modifier) {
-        composable("onboarding") { OnBoardingScreen(navController) }
-        composable(BottomNavItems.Home.route) {
-            HomeSc()
+fun NavigationGraph(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+) {
+    NavHost(
+        navController = navController,
+        startDestination = "onboarding",
+        modifier = modifier
+    ) {
+        composable(route = "onboarding") {
+            OnBoardingScreen(navController)
         }
-        composable(BottomNavItems.Search.route) {
+        composable(route = BottomNavItems.Home.route) {
+            HomeScreen(
+                onMovieClick = { movieId ->
+                    navController.navigate("movie/$movieId")
+                }
+            )
+        }
+        composable(route = BottomNavItems.Search.route) {
             SearchScreen()
         }
-        composable(BottomNavItems.Profile.route) {
+        composable(route = BottomNavItems.Profile.route) {
             ProfileScreen()
         }
-
+        composable(
+            route = "movie/{movieId}",
+            arguments = listOf(
+                navArgument("movieId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val movieId = navBackStackEntry.arguments?.getInt("movieId")
+            if (movieId != null){
+                FilmScreen(filmId = movieId)
+            }
+        }
     }
 }
 
