@@ -4,23 +4,22 @@ import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.repository.MovieRepository
 import com.example.skillcinema.domain.model.Movie
 import com.example.skillcinema.domain.model.MovieList
-import retrofit2.Response
 import javax.inject.Inject
 
 class MovieUseCase @Inject constructor(
     private val movieRepository: MovieRepository
 ) {
 
-    suspend fun getPopularMovies(page: Int = 1): Result<MovieList> {
-        return movieRepository.getPopularMovies(page)
+    suspend fun getPopularMovies(): Result<MovieList> {
+        return movieRepository.getPopularMovies()
     }
 
-    suspend fun getTopRatedMovies(page: Int = 1): Result<MovieList> {
-        return movieRepository.getTopRatedMovies(page)
+    suspend fun getTopRatedMovies(): Result<MovieList> {
+        return movieRepository.getTopRatedMovies()
     }
 
-    suspend fun getNowShowingMovies(page: Int = 1): Result<MovieList> {
-        return movieRepository.getNowShowingMovies(page)
+    suspend fun getNowShowingMovies(): Result<MovieList> {
+        return movieRepository.getNowShowingMovies()
     }
 
     suspend fun getFilmById(id: Int): Result<Movie> {

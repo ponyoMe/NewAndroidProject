@@ -1,6 +1,5 @@
 package com.example.skillcinema.data.repository
 
-import android.util.Log
 import com.example.skillcinema.data.client.KinopoiskApi
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
@@ -13,20 +12,20 @@ class MovieRepository @Inject constructor(
     private val kinopoiskApi: KinopoiskApi
 ) {
 
-    suspend fun getPopularMovies(page: Int = 1): Result<MovieList> {
+    suspend fun getPopularMovies(): Result<MovieList> {
         return safeApiCall {
-            kinopoiskApi.getPopularMovies(page)
+            kinopoiskApi.getMovies(order = "RATING", ratingFrom = 7 , ratingTo = 10, page = 1)
         }
     }
 
-    suspend fun getTopRatedMovies(page: Int = 1): Result<MovieList> {
+    suspend fun getTopRatedMovies(): Result<MovieList> {
         return safeApiCall {
-            kinopoiskApi.getTopRatedMovies(page)
+            kinopoiskApi.getMovies(order = "NUM_VOTE", ratingFrom = 8, page = 1)
         }
     }
-    suspend fun getNowShowingMovies(page: Int = 1): Result<MovieList> {
+    suspend fun getNowShowingMovies(): Result<MovieList> {
         return safeApiCall {
-            kinopoiskApi.getNowShowingMovies(page)
+            kinopoiskApi.getMovies(order = "YEAR", yearFrom = 2024, yearTo = 2024, page = 1)
         }
     }
 
