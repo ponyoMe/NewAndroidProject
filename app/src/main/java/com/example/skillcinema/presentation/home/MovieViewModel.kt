@@ -1,5 +1,6 @@
 package com.example.skillcinema.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.domain.model.Movie
@@ -43,20 +44,23 @@ class MovieViewModel @Inject constructor(
             var topRatedMovies = emptyList<Movie>()
             var nowShowingMovies = emptyList<Movie>()
 
-            movieUseCase.getPopularMovies().onSuccess {
-                it?.let { list -> popularMovies = list }
+            Log.d("loadMovies", "xdxd")
+
+            movieUseCase.getPopularMovies().onSuccess { movieList ->
+                popularMovies = movieList.films
             }.onFailure { e ->
+                Log.d("loadMovies", "Error to fetch pop movies")
                 errors["popular"] = e.message ?: "Failed to fetch popular movies"
             }
 
-            movieUseCase.getTopRatedMovies().onSuccess {
-                it?.let { list -> topRatedMovies = list }
+            movieUseCase.getTopRatedMovies().onSuccess { movieList ->
+                topRatedMovies = movieList.films
             }.onFailure { e ->
                 errors["topRated"] = e.message ?: "Failed to fetch top rated movies"
             }
 
-            movieUseCase.getNowShowingMovies().onSuccess {
-                it?.let { list -> nowShowingMovies = list }
+            movieUseCase.getNowShowingMovies().onSuccess { movieList ->
+                nowShowingMovies = movieList.films
             }.onFailure { e ->
                 errors["nowShowing"] = e.message ?: "Failed to fetch now showing movies"
             }

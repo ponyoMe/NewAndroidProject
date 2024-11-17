@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.CircularProgressIndicator
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -31,8 +33,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material3.IconButton
 import coil.compose.AsyncImage
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import com.example.skillcinema.data.model.FilmImage
+import com.example.testing.R
 
 @Composable
 fun FilmScreen(filmId: Int) {
@@ -58,93 +67,128 @@ fun FilmScreen(filmId: Int) {
         }
         is FilmState.Success -> {
             val film = (filmState as FilmState.Success).movie
+            val filmImages = (filmState as FilmState.Success).images
 
-            Column (
+            LazyColumn (
                 modifier = Modifier
                     .fillMaxSize()
             ){
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(400.dp)
-                        .background(
-                            Color.Black
-                        )
-                ){
-                    Text(
-                        text = film.nameOriginal.toString(),
-                        modifier = Modifier
-                            .align(Alignment.Center),
-                        color = Color.White
-                    )
-
-                    Row (
+                item{
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.Center)
-                            .padding(top = 24.dp),
-                        horizontalArrangement = Arrangement.Center,
-                    ){
-                        Text(
-                            text = film.ratingKinopoisk.toString(),
-                            color = Color.White,
-
-                        )
-
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        Text(
-                            text = film.nameRu.toString(),
-                            color = Color.White,
+                            .height(400.dp)
+                            .background(
+                                Color.Black
                             )
-                    }
-
-                    Row (
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.Center)
-                            .padding(top = 48.dp),
-                        horizontalArrangement = Arrangement.Center,
                     ){
                         Text(
-                            text = film.year.toString(),
-                            color = Color.White,
+                            text = film.nameOriginal.toString(),
+                            modifier = Modifier
+                                .align(Alignment.Center),
+                            color = Color.White
+                        )
+
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Center)
+                                .padding(top = 24.dp),
+                            horizontalArrangement = Arrangement.Center,
+                        ){
+                            Text(
+                                text = film.ratingKinopoisk.toString(),
+                                color = Color.White,
+
+                                )
+
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            Text(
+                                text = film.nameRu.toString(),
+                                color = Color.White,
+                            )
+                        }
+
+
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Center)
+                                .padding(top = 48.dp),
+                            horizontalArrangement = Arrangement.Center,
+                        ){
+                            Text(
+                                text = film.year.toString(),
+                                color = Color.White,
                             )
 
-                        Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(modifier = Modifier.width(4.dp))
 
-                        Text(
-                            text = film.genres.joinToString(separator = ", ") { it.genre },
-                            color = Color.White,
-                        )
+                            Text(
+                                text = film.genres.joinToString(separator = ", ") { it.genre },
+                                color = Color.White,
+                            )
+                        }
+
+                        Row (
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Center)
+                                .padding(top = 72.dp),
+                            horizontalArrangement = Arrangement.Center,
+                        ){
+                            Text(
+                                text = film.countries.joinToString(separator = ", ") { it.country },
+                                color = Color.White,
+                            )
+
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            Text(
+                                text = "${film.filmLength?.div(60)} ч ${film.filmLength?.rem(60)} мин",
+                                color = Color.White,
+                            )
+
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            Text(
+                                text = "${film.ratingAgeLimits?.replace("age","")}+",
+                                color = Color.White,
+                            )
+                        }
                     }
+                }
 
-                    Row (
+                item{
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.Center)
-                            .padding(top = 72.dp),
-                        horizontalArrangement = Arrangement.Center,
+                            .padding(24.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
-                            text = film.countries.joinToString(separator = ", ") { it.country },
-                            color = Color.White,
+                            text = "Галерея",
                         )
-
-                        Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
-                            text = "${film.filmLength?.div(60)} ч ${film.filmLength?.rem(60)} мин",
-                            color = Color.White,
+                            text = "${filmImages.size}"
                         )
 
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        Text(
-                            text = "${film.ratingAgeLimits?.replace("age","")}+",
-                            color = Color.White,
-                        )
+                        Button(
+                            onClick = {}
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_forward),
+                                contentDescription = null
+                            )
+                        }
                     }
+                }
+
+                item{
+                    FilmImages(filmImages)
                 }
             }
 
@@ -169,15 +213,20 @@ fun IconItem(icon: ImageVector, contentDescription: String, modifier: Modifier =
 @Composable
 fun FilmImages(filmImages: List<FilmImage>){
     LazyRow(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(filmImages){ image ->
             AsyncImage(
-                model = image.
+                model = image.imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
             )
         }
     }
 }
-
-
