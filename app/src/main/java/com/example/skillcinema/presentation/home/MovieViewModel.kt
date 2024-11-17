@@ -2,12 +2,14 @@ package com.example.skillcinema.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.skillcinema.data.model.Movie
-import com.example.skillcinema.domain.usecase.GetMovies
+import com.example.skillcinema.domain.model.Movie
+import com.example.skillcinema.domain.usecase.MovieUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed class MovieScreenState {
     data object Initial : MovieScreenState()
@@ -20,7 +22,11 @@ sealed class MovieScreenState {
     ) : MovieScreenState()
 }
 
-class MovieViewModel(private val getMovies: GetMovies) : ViewModel() {
+@HiltViewModel
+class MovieViewModel @Inject constructor(
+    private val movieUseCase: MovieUseCase,
+) : ViewModel() {
+
     private val _state = MutableStateFlow<MovieScreenState>(MovieScreenState.Initial)
     val state: StateFlow<MovieScreenState> = _state.asStateFlow()
 
@@ -34,23 +40,23 @@ class MovieViewModel(private val getMovies: GetMovies) : ViewModel() {
 
             val errors = mutableMapOf<String, String>()
             var popularMovies = emptyList<Movie>()
-            var topRatedMovies= emptyList<Movie>()
-            var nowShowingMovies= emptyList<Movie>()
+            var topRatedMovies = emptyList<Movie>()
+            var nowShowingMovies = emptyList<Movie>()
 
-            getMovies.getPopularMovies().onSuccess { movieList ->
-                popularMovies = movieList.films
+            movieUseCase.getPopularMovies().onSuccess {
+                it?.let { list -> popularMovies = list }
             }.onFailure { e ->
                 errors["popular"] = e.message ?: "Failed to fetch popular movies"
             }
 
-            getMovies.getTopRatedMovies().onSuccess { movieList ->
-                topRatedMovies = movieList.films
+            movieUseCase.getTopRatedMovies().onSuccess {
+                it?.let { list -> topRatedMovies = list }
             }.onFailure { e ->
                 errors["topRated"] = e.message ?: "Failed to fetch top rated movies"
             }
 
-            getMovies.getNowShowingMovies().onSuccess { movieList ->
-                nowShowingMovies = movieList.films
+            movieUseCase.getNowShowingMovies().onSuccess {
+                it?.let { list -> nowShowingMovies = list }
             }.onFailure { e ->
                 errors["nowShowing"] = e.message ?: "Failed to fetch now showing movies"
             }

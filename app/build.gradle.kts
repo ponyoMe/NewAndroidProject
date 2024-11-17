@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
 }
 
@@ -72,14 +74,17 @@ dependencies {
     implementation (libs.androidx.navigation.compose) // or latest version
 
     // Optional - If you are using Hilt for dependency injection
-    implementation (libs.androidx.hilt.navigation.compose)
     implementation (libs.gson)
 
     implementation (libs.retrofit) // Retrofit core library
 
+    // Hilt dependency injection
+    implementation (libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation (libs.androidx.hilt.navigation.compose)
+
     // Gson Converter
     implementation (libs.converter.gson)
-    implementation (libs.hilt.android)
     implementation (libs.coil.compose)
     //noinspection GradleDependency
     implementation (libs.androidx.lifecycle.viewmodel.compose)
