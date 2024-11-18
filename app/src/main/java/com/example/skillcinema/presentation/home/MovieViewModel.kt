@@ -1,9 +1,6 @@
 package com.example.skillcinema.presentation.home
 
-<<<<<<< HEAD
-=======
 import android.util.Log
->>>>>>> refactor/project-structure
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.domain.model.Movie
@@ -47,16 +44,6 @@ class MovieViewModel @Inject constructor(
             var topRatedMovies = emptyList<Movie>()
             var nowShowingMovies = emptyList<Movie>()
 
-<<<<<<< HEAD
-            movieUseCase.getPopularMovies().onSuccess {
-                it?.let { list -> popularMovies = list }
-            }.onFailure { e ->
-                errors["popular"] = e.message ?: "Failed to fetch popular movies"
-            }
-
-            movieUseCase.getTopRatedMovies().onSuccess {
-                it?.let { list -> topRatedMovies = list }
-=======
             Log.d("loadMovies", "xdxd")
 
             movieUseCase.getPopularMovies().onSuccess { movieList ->
@@ -68,18 +55,12 @@ class MovieViewModel @Inject constructor(
 
             movieUseCase.getTopRatedMovies().onSuccess { movieList ->
                 topRatedMovies = movieList.films
->>>>>>> refactor/project-structure
             }.onFailure { e ->
                 errors["topRated"] = e.message ?: "Failed to fetch top rated movies"
             }
 
-<<<<<<< HEAD
-            movieUseCase.getNowShowingMovies().onSuccess {
-                it?.let { list -> nowShowingMovies = list }
-=======
             movieUseCase.getNowShowingMovies().onSuccess { movieList ->
                 nowShowingMovies = movieList.films
->>>>>>> refactor/project-structure
             }.onFailure { e ->
                 errors["nowShowing"] = e.message ?: "Failed to fetch now showing movies"
             }
@@ -96,8 +77,4 @@ class MovieViewModel @Inject constructor(
     fun retry() {
         loadMovies()
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> refactor/project-structure

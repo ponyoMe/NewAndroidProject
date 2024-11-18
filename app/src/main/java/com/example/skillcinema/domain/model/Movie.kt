@@ -19,11 +19,8 @@ data class Movie(
     val ratingImdb: Double?,
     val year: Int?,
     val filmLength: Int?,
-<<<<<<< HEAD
-=======
     val description: String,
     val shortDescription: String,
->>>>>>> refactor/project-structure
     val ratingAgeLimits: String?,
     val type: String?,
     val posterUrl: String?,
