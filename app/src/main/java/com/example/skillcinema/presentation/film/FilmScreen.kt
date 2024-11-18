@@ -46,6 +46,7 @@ import androidx.compose.ui.res.painterResource
 import com.example.skillcinema.data.model.FilmImage
 import com.example.skillcinema.data.model.StaffResponse
 import com.example.testing.R
+import okhttp3.internal.http2.Header
 
 @Composable
 fun FilmScreen(filmId: Int) {
@@ -167,31 +168,8 @@ fun FilmScreen(filmId: Int) {
                     }
                 }
 
-                item{
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Над фильмом работали",
-                        )
-
-                        Text(
-                            text = "${filmStaff.size}"
-                        )
-
-                        Button(
-                            onClick = {}
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_forward),
-                                contentDescription = null
-                            )
-                        }
-                    }
+                item {
+                    HeaderText(content = "Над фильмом работали", listSize = filmStaff.size) { }
                 }
 
                 item{
@@ -200,31 +178,8 @@ fun FilmScreen(filmId: Int) {
                     }
                 }
 
-                item{
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ){
-                        Text(
-                            text = "Галерея",
-                        )
-
-                        Text(
-                            text = "${filmImages.size}"
-                        )
-
-                        Button(
-                            onClick = {}
-                        ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_forward),
-                                contentDescription = null
-                            )
-                        }
-                    }
+                item {
+                    HeaderText(content = "Галерея", listSize = filmImages.size) { }
                 }
 
                 item{
@@ -265,7 +220,8 @@ fun FilmImages(filmImages: List<FilmImage>, onItemClick: (FilmImage) -> Unit){
                 model = image.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
-                    .size(120.dp)
+                    .height(100.dp)
+                    .width(200.dp)
                     .clickable { onItemClick(image) }
                     .clip(RoundedCornerShape(8.dp)),
 
