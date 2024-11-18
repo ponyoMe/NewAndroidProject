@@ -247,7 +247,6 @@ fun MovieGridItem(item: Movie, onClick: (movieID: Int) -> Unit) {
     }
 }
 
-
 @Composable
 fun BackButton(onClick: () -> Unit) {
     IconButton(onClick = { onClick() }) {
