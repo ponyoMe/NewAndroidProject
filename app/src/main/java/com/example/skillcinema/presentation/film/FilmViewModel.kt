@@ -18,8 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-
-
 @HiltViewModel(assistedFactory = FilmViewModel.ViewModelFactory::class)
 class FilmViewModel @AssistedInject constructor(
     private val movieUseCase: MovieUseCase,

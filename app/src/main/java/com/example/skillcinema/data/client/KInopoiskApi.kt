@@ -21,8 +21,7 @@ interface KinopoiskApi {
 
     @GET("v2.2/films")
     suspend fun getMovies(
-        @Header("X-API-KEY") apiKey: String = API_KEY,
-        @Query("order") order: String,
+        @Header("X-API-KEY") apiKey: String = API_KEY,        @Query("order") order: String,
         @Query("type") type: String = "ALL",
         @Query("ratingFrom") ratingFrom: Int? = null,
         @Query("ratingTo") ratingTo: Int? = null,
