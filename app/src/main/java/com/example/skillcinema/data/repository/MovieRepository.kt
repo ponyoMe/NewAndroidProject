@@ -3,6 +3,7 @@ package com.example.skillcinema.data.repository
 import com.example.skillcinema.data.client.KinopoiskApi
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
+import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.domain.model.Movie
 import com.example.skillcinema.domain.model.MovieList
 import retrofit2.Response
@@ -39,6 +40,12 @@ class MovieRepository @Inject constructor(
     suspend fun getImagesByFilmId(id: Int): Result<FilmImagesResponse> {
         return safeApiCall2 {
             kinopoiskApi.getImagesByFilmId(filmId = id)
+        }
+    }
+
+    suspend fun getStaffByFilmId(id: Int): Result<List<StaffResponse>>{
+        return safeApiCall2 {
+            kinopoiskApi.getStaffByFilmId(filmId = id)
         }
     }
 

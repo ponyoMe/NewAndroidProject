@@ -1,6 +1,7 @@
 package com.example.skillcinema.domain.usecase
 
 import com.example.skillcinema.data.model.FilmImagesResponse
+import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.data.repository.MovieRepository
 import com.example.skillcinema.domain.model.Movie
 import com.example.skillcinema.domain.model.MovieList
@@ -28,5 +29,9 @@ class MovieUseCase @Inject constructor(
 
     suspend fun getImagesByFilmId(id: Int): Result<FilmImagesResponse> {
         return movieRepository.getImagesByFilmId(id)
+    }
+
+    suspend fun getStaffByFilmId(id: Int): Result<List<StaffResponse>>{
+        return movieRepository.getStaffByFilmId(id)
     }
 }

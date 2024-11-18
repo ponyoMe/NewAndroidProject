@@ -2,6 +2,7 @@ package com.example.skillcinema.data.client
 
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
+import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.domain.model.Movie
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,7 +15,7 @@ import retrofit2.http.Query
 import com.example.skillcinema.utils.Constants.BASE_URL
 import retrofit2.http.Path
 
-private const val API_KEY = "1f4ab51f-059f-47bf-a4f2-319ddbdaaef4"
+private const val API_KEY = "2ff89ed2-6a23-4f56-8964-989713704fbe"
 
 interface KinopoiskApi {
 
@@ -36,27 +37,25 @@ interface KinopoiskApi {
         @Path("id") filmId: Int
     ):Response<Movie>
 
-//    @GET("v1/staff/{id}")
-//    suspend fun getStaffByFilmId(
-//        @Header("X-API-KEY") apiKey: String = API_KEY,
-//        @Path("id") filmId: Int
-//    ): List<StaffResponse>
+    @GET("v1/staff")
+    suspend fun getStaffByFilmId(
+        @Query("filmId") filmId: Int,
+        @Header("X-API-KEY") apiKey: String = API_KEY,
+    ): Response<List<StaffResponse>>
 
     @GET("v2.2/films/{id}/images")
     suspend fun getImagesByFilmId(
         @Header("X-API-KEY") apiKey: String = API_KEY,
         @Path("id") filmId: Int,
-        @Query("page") page: Int = 1
     ): Response<FilmImagesResponse>
 
 //    @GET("v2.2/films/{id}/images")
-//    suspend fun getSimilarsFilms(
+//    suspend fun getSimilarFilms(
 //        @Header("X-API-KEY") apiKey: String = API_KEY,
 //        @Path("id") filmId: Int,
 //        @Query("page") page: Int = 1
 //    ): FilmImagesResponse
 }
-
 
 private val okHttpClient = OkHttpClient.Builder()
     .addInterceptor(HttpLoggingInterceptor().apply {

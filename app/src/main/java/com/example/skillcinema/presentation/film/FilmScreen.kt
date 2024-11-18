@@ -2,7 +2,9 @@ package com.example.skillcinema.presentation.film
 
 //noinspection UsingMaterialAndMaterial3Libraries
 //noinspection UsingMaterialAndMaterial3Libraries
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,12 +37,14 @@ import coil.compose.AsyncImage
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.Button
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.skillcinema.data.model.FilmImage
+import com.example.skillcinema.data.model.StaffResponse
 import com.example.testing.R
 
 @Composable
@@ -51,6 +55,8 @@ fun FilmScreen(filmId: Int) {
         }
 
     val filmState by viewModel.filmState.collectAsState()
+    val imagesState by viewModel.imagesState.collectAsState()
+    val staffState by viewModel.staffState.collectAsState()
 
     LaunchedEffect(filmId) {
         viewModel.fetchFilmById(filmId)
@@ -67,7 +73,8 @@ fun FilmScreen(filmId: Int) {
         }
         is FilmState.Success -> {
             val film = (filmState as FilmState.Success).movie
-            val filmImages = (filmState as FilmState.Success).images
+            val filmImages = (imagesState as? ImagesState.Success)?.images ?: emptyList()
+            val filmStaff = (staffState as? StaffState.Success)?.staff ?: emptyList()
 
             LazyColumn (
                 modifier = Modifier
@@ -169,6 +176,39 @@ fun FilmScreen(filmId: Int) {
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         Text(
+                            text = "Над фильмом работали",
+                        )
+
+                        Text(
+                            text = "${filmStaff.size}"
+                        )
+
+                        Button(
+                            onClick = {}
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_forward),
+                                contentDescription = null
+                            )
+                        }
+                    }
+                }
+
+                item{
+                    StaffLazyRow(filmStaff){ staff ->
+                        Log.d("FilmScreen", "Clicked on staff: ${staff.staffId}")
+                    }
+                }
+
+                item{
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        Text(
                             text = "Галерея",
                         )
 
@@ -188,7 +228,9 @@ fun FilmScreen(filmId: Int) {
                 }
 
                 item{
-                    FilmImages(filmImages)
+                    FilmImages(filmImages){ image->
+                        Log.d("FilmScreen", "Clicked on image: ${image.imageUrl}")
+                    }
                 }
             }
 
@@ -211,7 +253,7 @@ fun IconItem(icon: ImageVector, contentDescription: String, modifier: Modifier =
 }
 
 @Composable
-fun FilmImages(filmImages: List<FilmImage>){
+fun FilmImages(filmImages: List<FilmImage>, onItemClick: (FilmImage) -> Unit){
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -224,9 +266,53 @@ fun FilmImages(filmImages: List<FilmImage>){
                 contentDescription = null,
                 modifier = Modifier
                     .size(120.dp)
+                    .clickable { onItemClick(image) }
                     .clip(RoundedCornerShape(8.dp)),
+
                 contentScale = ContentScale.Crop
             )
+        }
+    }
+}
+
+@Composable
+fun StaffLazyRow(staffList: List<StaffResponse>, onItemClick: (StaffResponse) -> Unit){
+    LazyRow (
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ){
+        items(staffList) { staff ->
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .clickable { onItemClick(staff) }
+            ){
+                AsyncImage(
+                    model = staff.posterUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(60.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+                    contentScale = ContentScale.Crop
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column(
+
+                ) {
+                    Text(
+                        text = staff.nameEn,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = staff.professionKey,
+                    )
+                }
+            }
+
         }
     }
 }
