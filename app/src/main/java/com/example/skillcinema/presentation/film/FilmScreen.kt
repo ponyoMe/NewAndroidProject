@@ -45,6 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.skillcinema.data.model.FilmImage
 import com.example.skillcinema.data.model.StaffResponse
+import com.example.skillcinema.domain.model.Movie
 import com.example.testing.R
 import okhttp3.internal.http2.Header
 
@@ -166,6 +167,10 @@ fun FilmScreen(filmId: Int) {
                             )
                         }
                     }
+                }
+
+                item{
+                    MovieDescriptionItem(movie = film)
                 }
 
                 item {
