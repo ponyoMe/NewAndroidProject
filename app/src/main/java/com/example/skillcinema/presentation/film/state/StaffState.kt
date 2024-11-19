@@ -1,7 +1,6 @@
-package com.example.skillcinema.presentation.film
+package com.example.skillcinema.presentation.film.state
 
 import com.example.skillcinema.data.model.StaffResponse
-import com.example.skillcinema.domain.model.Movie
 
 sealed class StaffState {
     data object Loading: StaffState()
