@@ -43,6 +43,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.example.skillcinema.data.model.FilmImage
 import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.domain.model.Movie
@@ -50,7 +52,7 @@ import com.example.testing.R
 import okhttp3.internal.http2.Header
 
 @Composable
-fun FilmScreen(filmId: Int) {
+fun FilmScreen(filmId: Int, navController: NavHostController) {
     val viewModel =
         hiltViewModel<FilmViewModel, FilmViewModel.ViewModelFactory> { factory ->
             factory.create(filmId)
@@ -178,9 +180,7 @@ fun FilmScreen(filmId: Int) {
                 }
 
                 item{
-                    StaffLazyRow(filmStaff){ staff ->
-                        Log.d("FilmScreen", "Clicked on staff: ${staff.staffId}")
-                    }
+                    StaffLazyRow(filmStaff, navController)
                 }
 
                 item {
@@ -237,7 +237,7 @@ fun FilmImages(filmImages: List<FilmImage>, onItemClick: (FilmImage) -> Unit){
 }
 
 @Composable
-fun StaffLazyRow(staffList: List<StaffResponse>, onItemClick: (StaffResponse) -> Unit){
+fun StaffLazyRow(staffList: List<StaffResponse>,  navController: NavController){
     LazyRow (
         modifier = Modifier
             .fillMaxWidth()
@@ -249,7 +249,7 @@ fun StaffLazyRow(staffList: List<StaffResponse>, onItemClick: (StaffResponse) ->
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .clickable { onItemClick(staff) }
+                    .clickable { navController.navigate("staff_detail/${staff.staffId}") }
             ){
                 AsyncImage(
                     model = staff.posterUrl,

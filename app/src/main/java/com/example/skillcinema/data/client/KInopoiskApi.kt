@@ -2,6 +2,7 @@ package com.example.skillcinema.data.client
 
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
+import com.example.skillcinema.data.model.Staff
 import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.domain.model.Movie
 import okhttp3.OkHttpClient
@@ -48,6 +49,12 @@ interface KinopoiskApi {
         @Header("X-API-KEY") apiKey: String = API_KEY,
         @Path("id") filmId: Int,
     ): Response<FilmImagesResponse>
+
+    @GET("v1/staff/{id}")
+    suspend fun getStaffDetailById(
+        @Header("X-API-KEY") apiKey: String = API_KEY,
+        @Path("id") id: Int,
+        ):Response<Staff>
 
 //    @GET("v2.2/films/{id}/images")
 //    suspend fun getSimilarFilms(

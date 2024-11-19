@@ -28,6 +28,7 @@ import androidx.navigation.navArgument
 import com.example.skillcinema.presentation.film.FilmScreen
 import com.example.skillcinema.presentation.home.HomeScreen
 import com.example.skillcinema.presentation.onboarding.OnBoardingScreen
+import com.example.skillcinema.presentation.staff.StaffDetailScreen
 import com.example.testing.R
 
 
@@ -124,9 +125,12 @@ fun NavigationGraph(
             )
         ) { navBackStackEntry ->
             val movieId = navBackStackEntry.arguments?.getInt("movieId")
-            if (movieId != null){
-                FilmScreen(filmId = movieId)
+            if (movieId != null) {
+                FilmScreen(filmId = movieId, navController = navController)
             }
+        }
+        composable(route = "staff_detail/{staffId}") {
+            StaffDetailScreen(navController)
         }
     }
 }

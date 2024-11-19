@@ -1,5 +1,9 @@
 package com.example.skillcinema.data.model
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class Staff(
     val personId : Int,
     val webUrl: String,
