@@ -3,17 +3,15 @@ package com.example.skillcinema.presentation.film
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.skillcinema.data.model.FilmImage
-import com.example.skillcinema.data.model.FilmImagesResponse
-import com.example.skillcinema.data.model.StaffResponse
-import com.example.skillcinema.domain.model.Movie
 import com.example.skillcinema.domain.usecase.MovieUseCase
+import com.example.skillcinema.presentation.film.state.FilmState
+import com.example.skillcinema.presentation.film.state.ImagesState
+import com.example.skillcinema.presentation.film.state.SimilarFilmState
+import com.example.skillcinema.presentation.film.state.StaffState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,6 +21,7 @@ class FilmViewModel @AssistedInject constructor(
     private val movieUseCase: MovieUseCase,
     @Assisted private val filmId: Int,
 ): ViewModel() {
+
     private val _filmState = MutableStateFlow<FilmState>(FilmState.Loading)
     val filmState: StateFlow<FilmState> get() = _filmState
 
@@ -32,10 +31,14 @@ class FilmViewModel @AssistedInject constructor(
     private val _imagesState = MutableStateFlow<ImagesState>(ImagesState.Loading)
     val imagesState: StateFlow<ImagesState> get() = _imagesState
 
+    private val _similarFilmsState = MutableStateFlow<SimilarFilmState>(SimilarFilmState.Loading)
+    val similarMoviesState : StateFlow<SimilarFilmState> get() = _similarFilmsState
+
     init{
         fetchFilmById(filmId)
         fetchStaffByFilmId(filmId)
         fetchImagesByFilmId(filmId)
+        fetchSimilarMovies(filmId)
     }
 
     fun fetchFilmById(id: Int) = viewModelScope.launch {
@@ -75,6 +78,18 @@ class FilmViewModel @AssistedInject constructor(
                 Log.d("FilmViewModel", "error")
                 _imagesState.value = ImagesState.Error(message = "Error loading film: ${error.message}")
             }
+    }
+
+    fun fetchSimilarMovies(id: Int) = viewModelScope.launch {
+        _similarFilmsState.value = SimilarFilmState.Loading
+
+        try {
+            val similarFilm = movieUseCase.getSimilarMovies(id)
+            _similarFilmsState.value = SimilarFilmState.Success(similarMovies = similarFilm.items)
+        } catch (error: Exception){
+            _similarFilmsState.value = error.message?.let { SimilarFilmState.Error(message = it) }!!
+        }
+
     }
 
     @AssistedFactory

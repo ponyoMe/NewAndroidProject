@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.skillcinema.data.model.Film
 import com.example.skillcinema.presentation.film.FilmScreen
 import com.example.skillcinema.presentation.home.HomeScreen
 import com.example.skillcinema.presentation.onboarding.OnBoardingScreen
@@ -125,7 +126,7 @@ fun NavigationGraph(
         ) { navBackStackEntry ->
             val movieId = navBackStackEntry.arguments?.getInt("movieId")
             if (movieId != null){
-                FilmScreen(filmId = movieId)
+                FilmScreen(filmId = movieId, navController = navController)
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.example.skillcinema.domain.usecase
 
 import com.example.skillcinema.data.model.FilmImagesResponse
+import com.example.skillcinema.data.model.SimilarMovies
 import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.data.repository.MovieRepository
 import com.example.skillcinema.domain.model.Movie
@@ -33,5 +34,9 @@ class MovieUseCase @Inject constructor(
 
     suspend fun getStaffByFilmId(id: Int): Result<List<StaffResponse>>{
         return movieRepository.getStaffByFilmId(id)
+    }
+
+    suspend fun getSimilarMovies(id: Int): SimilarMovies{
+        return movieRepository.getSimilarMovies(id)
     }
 }

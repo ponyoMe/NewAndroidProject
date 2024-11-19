@@ -1,4 +1,4 @@
-package com.example.skillcinema.presentation.film
+package com.example.skillcinema.presentation.film.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -17,7 +17,8 @@ import com.example.skillcinema.domain.model.Movie
 fun MovieDescriptionItem(movie: Movie){
     Column (
         modifier = Modifier
-            .padding(25.dp)
+            .padding(horizontal = 25.dp)
+            .padding(top = 25.dp)
     ){
         Text(
             text = movie.shortDescription,

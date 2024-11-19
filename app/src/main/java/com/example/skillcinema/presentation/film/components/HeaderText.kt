@@ -1,4 +1,4 @@
-package com.example.skillcinema.presentation.film
+package com.example.skillcinema.presentation.film.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,8 @@ fun HeaderText(content: String, listSize: Int, onClick: () -> Unit){
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(26.dp),
+            .padding(top = 26.dp)
+            .padding(horizontal = 26.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ){

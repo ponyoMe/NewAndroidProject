@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.Alignment
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 //noinspection UsingMaterialAndMaterial3Libraries
@@ -29,28 +27,34 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material3.IconButton
-import coil.compose.AsyncImage
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Button
-import androidx.compose.runtime.remember
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.skillcinema.data.model.Film
 import com.example.skillcinema.data.model.FilmImage
-import com.example.skillcinema.data.model.StaffResponse
-import com.example.skillcinema.domain.model.Movie
+import com.example.skillcinema.presentation.film.components.FilmImages
+import com.example.skillcinema.presentation.film.components.HeaderText
+import com.example.skillcinema.presentation.film.components.MovieDescriptionItem
+import com.example.skillcinema.presentation.film.components.SimilarFilmsList
+import com.example.skillcinema.presentation.film.components.StaffList
+import com.example.skillcinema.presentation.film.state.FilmState
+import com.example.skillcinema.presentation.film.state.ImagesState
+import com.example.skillcinema.presentation.film.state.SimilarFilmState
+import com.example.skillcinema.presentation.film.state.StaffState
 import com.example.testing.R
 import okhttp3.internal.http2.Header
 
 @Composable
-fun FilmScreen(filmId: Int) {
+fun FilmScreen(
+    filmId: Int,
+    navController: NavController
+) {
     val viewModel =
         hiltViewModel<FilmViewModel, FilmViewModel.ViewModelFactory> { factory ->
             factory.create(filmId)
@@ -59,6 +63,7 @@ fun FilmScreen(filmId: Int) {
     val filmState by viewModel.filmState.collectAsState()
     val imagesState by viewModel.imagesState.collectAsState()
     val staffState by viewModel.staffState.collectAsState()
+    val similarMoviesState by viewModel.similarMoviesState.collectAsState()
 
     LaunchedEffect(filmId) {
         viewModel.fetchFilmById(filmId)
@@ -77,6 +82,7 @@ fun FilmScreen(filmId: Int) {
             val film = (filmState as FilmState.Success).movie
             val filmImages = (imagesState as? ImagesState.Success)?.images ?: emptyList()
             val filmStaff = (staffState as? StaffState.Success)?.staff ?: emptyList()
+            val similarFilms = (similarMoviesState as? SimilarFilmState.Success)?.similarMovies ?: emptyList()
 
             LazyColumn (
                 modifier = Modifier
@@ -166,20 +172,47 @@ fun FilmScreen(filmId: Int) {
                                 color = Color.White,
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
+                            IconItem(R.drawable.ic_like, modifier = Modifier.clickable {  })
+                            IconItem(R.drawable.ic_zakladki, modifier = Modifier.clickable {  })
+                            IconItem(R.drawable.ic_dont_show, modifier = Modifier.clickable {  })
+                            IconItem(R.drawable.ic_share, modifier = Modifier.clickable {  })
+                            IconItem(R.drawable.ic_other, modifier = Modifier.clickable {  })
+                        }
+
                     }
                 }
+
+                val actors = filmStaff.filter { it.professionKey == "ACTOR"}
+                val directors = filmStaff.filter { it.professionKey != "ACTOR"}
 
                 item{
                     MovieDescriptionItem(movie = film)
                 }
 
-                item {
-                    HeaderText(content = "Над фильмом работали", listSize = filmStaff.size) { }
+                if (actors.isNotEmpty()){
+                    item {
+                        HeaderText(content = "В фильме снимались", listSize = actors.size) { }
+                    }
+
+                    item{
+                        StaffList(actors, (actors.size + 3)/4, navController = rememberNavController())
+                    }
                 }
 
-                item{
-                    StaffLazyRow(filmStaff){ staff ->
-                        Log.d("FilmScreen", "Clicked on staff: ${staff.staffId}")
+                if(directors.isNotEmpty()){
+                    item {
+                        HeaderText(content = "Над фильмом работали", listSize = directors.size) { }
+                    }
+
+                    item {
+                        StaffList(directors, (directors.size + 1)/2, navController = rememberNavController())
                     }
                 }
 
@@ -192,6 +225,14 @@ fun FilmScreen(filmId: Int) {
                         Log.d("FilmScreen", "Clicked on image: ${image.imageUrl}")
                     }
                 }
+
+                item {
+                    HeaderText(content = "Похожие фильмы", listSize = similarFilms.size) {}
+                }
+
+                item {
+                    SimilarFilmsList(similarFilms, navController)
+                }
             }
 
         }
@@ -200,80 +241,15 @@ fun FilmScreen(filmId: Int) {
 }
 
 @Composable
-fun IconItem(icon: ImageVector, contentDescription: String, modifier: Modifier = Modifier){
+fun IconItem(iconResId: Int, modifier: Modifier = Modifier){
     IconButton(
         onClick = {},
         modifier = Modifier
     ){
         Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
+            painter = painterResource(id = iconResId),
+            contentDescription = null,
         )
     }
 }
 
-@Composable
-fun FilmImages(filmImages: List<FilmImage>, onItemClick: (FilmImage) -> Unit){
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 24.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(filmImages){ image ->
-            AsyncImage(
-                model = image.imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .height(100.dp)
-                    .width(200.dp)
-                    .clickable { onItemClick(image) }
-                    .clip(RoundedCornerShape(8.dp)),
-
-                contentScale = ContentScale.Crop
-            )
-        }
-    }
-}
-
-@Composable
-fun StaffLazyRow(staffList: List<StaffResponse>, onItemClick: (StaffResponse) -> Unit){
-    LazyRow (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ){
-        items(staffList) { staff ->
-            Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .clickable { onItemClick(staff) }
-            ){
-                AsyncImage(
-                    model = staff.posterUrl,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.Crop
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column(
-
-                ) {
-                    Text(
-                        text = staff.nameEn,
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = staff.professionKey,
-                    )
-                }
-            }
-
-        }
-    }
-}

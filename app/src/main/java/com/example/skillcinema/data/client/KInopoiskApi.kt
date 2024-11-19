@@ -2,6 +2,7 @@ package com.example.skillcinema.data.client
 
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
+import com.example.skillcinema.data.model.SimilarMovies
 import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.domain.model.Movie
 import okhttp3.OkHttpClient
@@ -15,13 +16,14 @@ import retrofit2.http.Query
 import com.example.skillcinema.utils.Constants.BASE_URL
 import retrofit2.http.Path
 
-private const val API_KEY = "2ff89ed2-6a23-4f56-8964-989713704fbe"
+private const val API_KEY = "1f4ab51f-059f-47bf-a4f2-319ddbdaaef4"
 
 interface KinopoiskApi {
 
     @GET("v2.2/films")
     suspend fun getMovies(
-        @Header("X-API-KEY") apiKey: String = API_KEY,        @Query("order") order: String,
+        @Header("X-API-KEY") apiKey: String = API_KEY,
+        @Query("order") order: String,
         @Query("type") type: String = "ALL",
         @Query("ratingFrom") ratingFrom: Int? = null,
         @Query("ratingTo") ratingTo: Int? = null,
@@ -48,12 +50,11 @@ interface KinopoiskApi {
         @Path("id") filmId: Int,
     ): Response<FilmImagesResponse>
 
-//    @GET("v2.2/films/{id}/images")
-//    suspend fun getSimilarFilms(
-//        @Header("X-API-KEY") apiKey: String = API_KEY,
-//        @Path("id") filmId: Int,
-//        @Query("page") page: Int = 1
-//    ): FilmImagesResponse
+    @GET("v2.2/films/{id}/similars")
+    suspend fun getSimilarFilms(
+        @Header("X-API-KEY") apiKey: String = API_KEY,
+        @Path("id") filmId: Int,
+    ): SimilarMovies
 }
 
 private val okHttpClient = OkHttpClient.Builder()
