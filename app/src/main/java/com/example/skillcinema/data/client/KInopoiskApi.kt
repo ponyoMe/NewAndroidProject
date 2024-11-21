@@ -16,7 +16,7 @@ import retrofit2.http.Query
 import com.example.skillcinema.utils.Constants.BASE_URL
 import retrofit2.http.Path
 
-private const val API_KEY = "1f4ab51f-059f-47bf-a4f2-319ddbdaaef4"
+private const val API_KEY = "8f6cd3ba-c943-4651-b77c-a1a02247d079"
 
 interface KinopoiskApi {
 

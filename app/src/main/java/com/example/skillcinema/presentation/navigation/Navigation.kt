@@ -27,6 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.skillcinema.data.model.Film
 import com.example.skillcinema.presentation.film.FilmScreen
+import com.example.skillcinema.presentation.film.GalleryScreen
 import com.example.skillcinema.presentation.home.HomeScreen
 import com.example.skillcinema.presentation.onboarding.OnBoardingScreen
 import com.example.testing.R
@@ -127,6 +128,18 @@ fun NavigationGraph(
             val movieId = navBackStackEntry.arguments?.getInt("movieId")
             if (movieId != null){
                 FilmScreen(filmId = movieId, navController = navController)
+            }
+        }
+        composable(route = "gallery/{filmId}",
+            arguments = listOf(
+                navArgument("filmId"){
+                    type = NavType.IntType
+                }
+            )
+        ) {navBackStackEntry ->
+            val filmId = navBackStackEntry.arguments?.getInt("filmId")
+            if (filmId != null) {
+                GalleryScreen(filmId = filmId, navController= navController)
             }
         }
     }
