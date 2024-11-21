@@ -73,7 +73,7 @@ fun FilmScreen(
         is FilmState.Loading -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
-                //contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center
             ){
                 CircularProgressIndicator()
             }
@@ -217,7 +217,9 @@ fun FilmScreen(
                 }
 
                 item {
-                    HeaderText(content = "Галерея", listSize = filmImages.size) { }
+                    HeaderText(content = "Галерея", listSize = filmImages.size) {
+                        navController.navigate("gallery/${filmId}")
+                    }
                 }
 
                 item{
