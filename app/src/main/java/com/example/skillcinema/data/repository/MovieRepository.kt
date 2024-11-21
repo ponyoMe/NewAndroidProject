@@ -52,9 +52,9 @@ class MovieRepository @Inject constructor(
 
 
     }
-    suspend fun getStaffDetails(id: Int): Result<Staff>{
+    suspend fun getStaffById(id : Int): Result<Staff>{
         return safeApiCall2 {
-            kinopoiskApi.getStaffDetailById(id =id )
+            kinopoiskApi.getStaffById(staffId = id)
         }
     }
 

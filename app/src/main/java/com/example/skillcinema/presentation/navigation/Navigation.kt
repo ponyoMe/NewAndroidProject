@@ -1,5 +1,6 @@
 package com.example.skillcinema.presentation.navigation
 
+import ActorScreen
 import com.example.skillcinema.presentation.profile.ProfileScreen
 import com.example.skillcinema.presentation.search.SearchScreen
 import androidx.compose.foundation.layout.Spacer
@@ -25,11 +26,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.skillcinema.data.model.Film
 import com.example.skillcinema.presentation.film.FilmScreen
+import com.example.skillcinema.presentation.film.Filmography
 import com.example.skillcinema.presentation.home.HomeScreen
 import com.example.skillcinema.presentation.onboarding.OnBoardingScreen
-import com.example.skillcinema.presentation.staff.StaffDetailScreen
 import com.example.testing.R
 
 
@@ -127,12 +127,38 @@ fun NavigationGraph(
         ) { navBackStackEntry ->
             val movieId = navBackStackEntry.arguments?.getInt("movieId")
             if (movieId != null){
-                FilmScreen(filmId = movieId, navController = navController)
+                FilmScreen(filmId = movieId, navController)
+
             }
         }
-        composable(route = "staff_detail/{staffId}") {
-            StaffDetailScreen(navController)
+        composable(route = "actor/{actorId}",
+            arguments = listOf(
+                navArgument("actorId"){
+                    type = NavType.IntType
+                }
+            )
+        ) { navBackStackEntry ->
+            val actorId = navBackStackEntry.arguments?.getInt("actorId")
+            if(actorId != null){
+                ActorScreen(actorId = actorId, navController=navController)
+            }
         }
+
+        composable(route ="filmography/{actorId}",
+            arguments = listOf(
+                navArgument("actorId"){
+                    type=NavType.IntType
+                }
+            ),
+        ) {navBackStackEntry ->
+            val actorId = navBackStackEntry.arguments?.getInt("actorId")
+
+            if (actorId != null) {
+                Filmography( actorId = actorId, navController = navController)
+            }
+
+        }
+
     }
 }
 

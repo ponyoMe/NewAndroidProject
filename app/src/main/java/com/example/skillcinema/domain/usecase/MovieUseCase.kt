@@ -36,9 +36,6 @@ class MovieUseCase @Inject constructor(
     suspend fun getStaffByFilmId(id: Int): Result<List<StaffResponse>>{
         return movieRepository.getStaffByFilmId(id)
     }
-    suspend fun getStaffDetails(id: Int):Result<Staff>{
-        return movieRepository.getStaffDetails(id)
-    }
 
     suspend fun getSimilarMovies(id: Int): SimilarMovies{
         return movieRepository.getSimilarMovies(id)

@@ -3,6 +3,7 @@ package com.example.skillcinema.data.client
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
 import com.example.skillcinema.data.model.SimilarMovies
+import com.example.skillcinema.data.model.Staff
 import com.example.skillcinema.data.model.StaffResponse
 import com.example.skillcinema.domain.model.Movie
 import okhttp3.OkHttpClient
@@ -16,7 +17,7 @@ import retrofit2.http.Query
 import com.example.skillcinema.utils.Constants.BASE_URL
 import retrofit2.http.Path
 
-private const val API_KEY = "2ff89ed2-6a23-4f56-8964-989713704fbe"
+private const val API_KEY = "9d3abb14-8d26-4717-941a-2843d59692e3"
 
 interface KinopoiskApi {
 
@@ -55,11 +56,12 @@ interface KinopoiskApi {
         @Header("X-API-KEY") apiKey: String = API_KEY,
         @Path("id") filmId: Int,
     ): SimilarMovies
+
     @GET("v1/staff/{id}")
-    suspend fun getStaffDetailById(
-        @Header("X-API-KEY") apiKey: String = API_KEY,
-        @Path("id") id: Int,
-        ):Response<Staff>
+    suspend fun getStaffById(
+        @Header("X-API-KEY") apiKey: String= API_KEY,
+        @Path("id") staffId:Int
+    ): Response<Staff>
 
 //    @GET("v2.2/films/{id}/images")
 //    suspend fun getSimilarFilms(

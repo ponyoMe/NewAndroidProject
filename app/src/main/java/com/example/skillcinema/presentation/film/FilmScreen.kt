@@ -202,7 +202,7 @@ fun FilmScreen(
                     }
 
                     item{
-                        StaffList(actors, (actors.size + 3)/4, navController = rememberNavController())
+                        StaffList(actors, (actors.size + 3)/4, navController = navController, )
                     }
                 }
 
@@ -212,7 +212,7 @@ fun FilmScreen(
                     }
 
                     item {
-                        StaffList(directors, (directors.size + 1)/2, navController = rememberNavController())
+                        StaffList(directors, (directors.size + 1)/2, navController = navController)
                     }
                 }
 

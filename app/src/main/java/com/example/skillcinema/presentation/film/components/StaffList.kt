@@ -35,7 +35,8 @@ import dagger.Lazy
 fun StaffList(
     staffList: List<StaffResponse>,
     rowCount: Int,
-    navController: NavController
+    navController: NavController,
+
 ){
     val chunkedList = staffList.chunked(rowCount)
 
@@ -52,7 +53,7 @@ fun StaffList(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(rowItems) { staff ->
-                    StaffItem(staff, onItemClick = {}) //navigating
+                    StaffItem(staff, onItemClick = { navController.navigate("actor/${staff.staffId}") })
                 }
             }
         }
@@ -68,7 +69,8 @@ fun StaffItem(
 ){
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+        .clickable(onClick = onItemClick),
         verticalAlignment = Alignment.CenterVertically
     ){
         AsyncImage(
