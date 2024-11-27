@@ -48,7 +48,10 @@ fun MovieItemView(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(),
-                onClick = { onClick.invoke(item.kinopoiskId) }
+                onClick = {
+                    onClick.invoke(item.kinopoiskId)
+                    Log.d("MovieItemView:" , "Clicked to: ${item.kinopoiskId}")
+                }
             ),
         horizontalAlignment = Alignment.Start,
     ) {

@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.skillcinema.presentation.film.state.ImagesState
+import com.example.skillcinema.presentation.film.states.ImagesState
 
 @Composable
 fun GalleryScreen(
@@ -93,7 +93,7 @@ fun GalleryScreen(
                                 model = image.imageUrl,
                                 contentDescription = null,
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxWidth() 
                                     .aspectRatio(14 / 9f)
                             )
                         } else if (index % 3 == 0) {

@@ -30,25 +30,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.material3.IconButton
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 //noinspection UsingMaterialAndMaterial3Libraries
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.skillcinema.data.model.Film
-import com.example.skillcinema.data.model.FilmImage
+import com.example.skillcinema.presentation.film.components.FilmDetailItem
 import com.example.skillcinema.presentation.film.components.FilmImages
 import com.example.skillcinema.presentation.film.components.HeaderText
 import com.example.skillcinema.presentation.film.components.MovieDescriptionItem
 import com.example.skillcinema.presentation.film.components.SimilarFilmsList
 import com.example.skillcinema.presentation.film.components.StaffList
-import com.example.skillcinema.presentation.film.state.FilmState
-import com.example.skillcinema.presentation.film.state.ImagesState
-import com.example.skillcinema.presentation.film.state.SimilarFilmState
-import com.example.skillcinema.presentation.film.state.StaffState
+import com.example.skillcinema.presentation.film.states.FilmState
+import com.example.skillcinema.presentation.film.states.ImagesState
+import com.example.skillcinema.presentation.film.states.SimilarFilmState
+import com.example.skillcinema.presentation.film.states.StaffState
 import com.example.testing.R
-import okhttp3.internal.http2.Header
 
 @Composable
 fun FilmScreen(
@@ -88,105 +84,8 @@ fun FilmScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ){
-                item{
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(400.dp)
-                            .background(
-                                Color.Black
-                            )
-                    ){
-                        Text(
-                            text = film.nameOriginal.toString(),
-                            modifier = Modifier
-                                .align(Alignment.Center),
-                            color = Color.White
-                        )
-
-                        Row (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.Center)
-                                .padding(top = 24.dp),
-                            horizontalArrangement = Arrangement.Center,
-                        ){
-                            Text(
-                                text = film.ratingKinopoisk.toString(),
-                                color = Color.White,
-
-                                )
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = film.nameRu.toString(),
-                                color = Color.White,
-                            )
-                        }
-
-
-                        Row (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.Center)
-                                .padding(top = 48.dp),
-                            horizontalArrangement = Arrangement.Center,
-                        ){
-                            Text(
-                                text = film.year.toString(),
-                                color = Color.White,
-                            )
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = film.genres.joinToString(separator = ", ") { it.genre },
-                                color = Color.White,
-                            )
-                        }
-
-                        Row (
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.Center)
-                                .padding(top = 72.dp),
-                            horizontalArrangement = Arrangement.Center,
-                        ){
-                            Text(
-                                text = film.countries.joinToString(separator = ", ") { it.country },
-                                color = Color.White,
-                            )
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = "${film.filmLength?.div(60)} ч ${film.filmLength?.rem(60)} мин",
-                                color = Color.White,
-                            )
-
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = "${film.ratingAgeLimits?.replace("age","")}+",
-                                color = Color.White,
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Row(
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ){
-                            IconItem(R.drawable.ic_like, modifier = Modifier.clickable {  })
-                            IconItem(R.drawable.ic_zakladki, modifier = Modifier.clickable {  })
-                            IconItem(R.drawable.ic_dont_show, modifier = Modifier.clickable {  })
-                            IconItem(R.drawable.ic_share, modifier = Modifier.clickable {  })
-                            IconItem(R.drawable.ic_other, modifier = Modifier.clickable {  })
-                        }
-
-                    }
+                item {
+                    FilmDetailItem(film, navController)
                 }
 
                 val actors = filmStaff.filter { it.professionKey == "ACTOR"}
@@ -239,19 +138,6 @@ fun FilmScreen(
 
         }
         is FilmState.Error -> TODO()
-    }
-}
-
-@Composable
-fun IconItem(iconResId: Int, modifier: Modifier = Modifier){
-    IconButton(
-        onClick = {},
-        modifier = Modifier
-    ){
-        Icon(
-            painter = painterResource(id = iconResId),
-            contentDescription = null,
-        )
     }
 }
 

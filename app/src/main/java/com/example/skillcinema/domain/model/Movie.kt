@@ -23,6 +23,7 @@ data class Movie(
     val shortDescription: String,
     val ratingAgeLimits: String?,
     val type: String?,
+    val coverUrl: String?,
     val posterUrl: String?,
     val posterUrlPreview: String?
 )

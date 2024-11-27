@@ -44,12 +44,9 @@ class MovieViewModel @Inject constructor(
             var topRatedMovies = emptyList<Movie>()
             var nowShowingMovies = emptyList<Movie>()
 
-            Log.d("loadMovies", "xdxd")
-
             movieUseCase.getPopularMovies().onSuccess { movieList ->
                 popularMovies = movieList.films
             }.onFailure { e ->
-                Log.d("loadMovies", "Error to fetch pop movies")
                 errors["popular"] = e.message ?: "Failed to fetch popular movies"
             }
 

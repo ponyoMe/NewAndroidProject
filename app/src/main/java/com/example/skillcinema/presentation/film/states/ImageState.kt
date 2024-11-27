@@ -1,4 +1,4 @@
-package com.example.skillcinema.presentation.film.state
+package com.example.skillcinema.presentation.film.states
 
 import com.example.skillcinema.data.model.FilmImage
 

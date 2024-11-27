@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skillcinema.domain.usecase.MovieUseCase
-import com.example.skillcinema.presentation.film.state.FilmState
-import com.example.skillcinema.presentation.film.state.ImagesState
-import com.example.skillcinema.presentation.film.state.SimilarFilmState
-import com.example.skillcinema.presentation.film.state.StaffState
+import com.example.skillcinema.presentation.film.states.FilmState
+import com.example.skillcinema.presentation.film.states.ImagesState
+import com.example.skillcinema.presentation.film.states.SimilarFilmState
+import com.example.skillcinema.presentation.film.states.StaffState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -45,7 +45,7 @@ class FilmViewModel @AssistedInject constructor(
         _filmState.value = FilmState.Loading
         movieUseCase.getFilmById(id)
             .onSuccess { film ->
-                Log.d("FilmViewModel", "Film loaded: ${film.kinopoiskId}")
+                //Log.d("FilmViewModel", "Film loaded: ${film.kinopoiskId}")
                 _filmState.value = FilmState.Success(movie = film)
             }
             .onFailure { error ->
@@ -58,7 +58,7 @@ class FilmViewModel @AssistedInject constructor(
         _staffState.value = StaffState.Loading
         movieUseCase.getStaffByFilmId(id)
             .onSuccess { staffList ->
-                Log.d("FilmViewModel", "Staff loaded: ${staffList.size}")
+                //Log.d("FilmViewModel", "Staff loaded: ${staffList.size}")
                 _staffState.value = StaffState.Success(staff = staffList)
             }
             .onFailure { error ->
@@ -71,7 +71,7 @@ class FilmViewModel @AssistedInject constructor(
         _imagesState.value = ImagesState.Loading
         movieUseCase.getImagesByFilmId(id)
             .onSuccess { filmImagesResponse ->
-                Log.d("FilmViewModel", "Images loaded: ${filmImagesResponse.items.size}")
+                //Log.d("FilmViewModel", "Images loaded: ${filmImagesResponse.items.size}")
                 _imagesState.value = ImagesState.Success(images = filmImagesResponse.items)
             }
             .onFailure { error ->
@@ -85,6 +85,7 @@ class FilmViewModel @AssistedInject constructor(
 
         try {
             val similarFilm = movieUseCase.getSimilarMovies(id)
+            //Log.d("FilmViewModel", "Images loaded: ${similarFilm.items.size}")
             _similarFilmsState.value = SimilarFilmState.Success(similarMovies = similarFilm.items)
         } catch (error: Exception){
             _similarFilmsState.value = error.message?.let { SimilarFilmState.Error(message = it) }!!
