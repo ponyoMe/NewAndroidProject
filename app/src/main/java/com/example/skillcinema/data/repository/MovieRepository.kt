@@ -1,8 +1,11 @@
 package com.example.skillcinema.data.repository
 
+import android.util.Log
+import androidx.compose.runtime.key
 import com.example.skillcinema.data.client.KinopoiskApi
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
+import com.example.skillcinema.data.model.MovieSearch
 import com.example.skillcinema.data.model.SimilarMovies
 import com.example.skillcinema.data.model.Staff
 import com.example.skillcinema.data.model.StaffResponse
@@ -61,6 +64,12 @@ class MovieRepository @Inject constructor(
     suspend fun getSimilarMovies(id: Int): SimilarMovies {
         return kinopoiskApi.getSimilarFilms(filmId = id)
     }
+
+    suspend fun getMoviesByKeyword(keyword: String): List<MovieSearch>{
+
+        return kinopoiskApi.getFilmsByKeyword(keyword = keyword).films
+    }
+
 
     private suspend fun <T >safeApiCall2(apiCall: suspend () -> Response<T>): Result<T>{
         return try {

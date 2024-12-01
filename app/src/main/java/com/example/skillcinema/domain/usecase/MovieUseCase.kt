@@ -1,6 +1,8 @@
 package com.example.skillcinema.domain.usecase
 
+import android.util.Log
 import com.example.skillcinema.data.model.FilmImagesResponse
+import com.example.skillcinema.data.model.MovieSearch
 import com.example.skillcinema.data.model.SimilarMovies
 import com.example.skillcinema.data.model.Staff
 import com.example.skillcinema.data.model.StaffResponse
@@ -39,5 +41,10 @@ class MovieUseCase @Inject constructor(
 
     suspend fun getSimilarMovies(id: Int): SimilarMovies{
         return movieRepository.getSimilarMovies(id)
+    }
+
+    suspend fun getMoviesByKeyword(keyword: String): List<MovieSearch>{
+        Log.d("MovieUseCase:" , "MovieList: ${movieRepository.getMoviesByKeyword(keyword).isEmpty()}")
+        return movieRepository.getMoviesByKeyword(keyword)
     }
 }

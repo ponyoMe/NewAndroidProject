@@ -18,7 +18,7 @@ data class Movie(
     val ratingKinopoisk: Double?,
     val ratingImdb: Double?,
     val year: Int?,
-    val filmLength: Int?,
+    val filmLength: String,
     val description: String,
     val shortDescription: String,
     val ratingAgeLimits: String?,

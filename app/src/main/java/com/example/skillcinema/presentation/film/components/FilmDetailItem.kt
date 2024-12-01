@@ -174,7 +174,8 @@ fun FilmDetailItem(
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Text(
-                        text = "${film.filmLength?.div(60)} ч ${film.filmLength?.rem(60)} мин",
+                        //text = "${film.filmLength?.div(60)} ч ${film.filmLength?.rem(60)} мин",
+                        text = film.filmLength,
                         style = TextStyle(
                             fontSize = 12.sp,
                             fontWeight = FontWeight(400),

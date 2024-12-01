@@ -113,7 +113,7 @@ fun NavigationGraph(
             )
         }
         composable(route = BottomNavItems.Search.route) {
-            SearchScreen()
+            SearchScreen(navController = navController)
         }
         composable(route = BottomNavItems.Profile.route) {
             ProfileScreen()
@@ -129,7 +129,6 @@ fun NavigationGraph(
             val movieId = navBackStackEntry.arguments?.getInt("movieId")
             if (movieId != null){
                 FilmScreen(filmId = movieId, navController)
-
             }
         }
         composable(route = "gallery/{filmId}",

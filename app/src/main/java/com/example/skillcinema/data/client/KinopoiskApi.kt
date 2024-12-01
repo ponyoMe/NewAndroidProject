@@ -2,6 +2,7 @@ package com.example.skillcinema.data.client
 
 import com.example.skillcinema.data.model.FilmImagesResponse
 import com.example.skillcinema.data.model.MovieResponse
+import com.example.skillcinema.data.model.MovieSearchResponse
 import com.example.skillcinema.data.model.SimilarMovies
 import com.example.skillcinema.data.model.Staff
 import com.example.skillcinema.data.model.StaffResponse
@@ -63,6 +64,12 @@ interface KinopoiskApi {
         @Path("id") staffId:Int
     ): Response<Staff>
 
+    @GET("v2.1/films/search-by-keyword")
+    suspend fun getFilmsByKeyword(
+        @Header("X-API-KEY") apiKey: String = API_KEY,
+        @Query("keyword") keyword: String,
+        @Query("page") page: Int = 1
+    ): MovieSearchResponse
 }
 
 private val okHttpClient = OkHttpClient.Builder()

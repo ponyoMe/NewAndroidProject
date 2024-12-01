@@ -2,6 +2,7 @@ package com.example.skillcinema.core.di
 
 import com.example.skillcinema.data.client.KinopoiskApi
 import com.example.skillcinema.data.repository.MovieRepository
+import com.example.skillcinema.domain.usecase.MovieUseCase
 import com.example.skillcinema.utils.Constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -51,5 +52,4 @@ object AppModule {
     ): MovieRepository {
         return MovieRepository(kinopoiskApi)
     }
-
 }
